@@ -13,6 +13,8 @@ func NewServices() Services {
 	lorowanServices := lorowan.NewServices()
 	devuiServices := devui.NewServices()
 
+	devuiServices.Restore()
+
 	return &service{
 		logger.Sugar(),
 		logger,

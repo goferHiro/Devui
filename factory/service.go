@@ -24,12 +24,15 @@ func (s *service) Produce(devui string) {
 func (s *service) Consume() {
 	devui := <-s.mq
 	s.lorowanServices.RegisterDEVEUI(devui)
+	s.logger.Debug("consumed", zap.String("devui", devui))
+
 }
 
 func (s *service) BatchOf100() (devuis []string) {
+	devuis = make([]string, 0)
 	for len(devuis) < 100 {
 		devui := s.devuiServices.GenerateDevUI()
-		if s.devuiServices.ValidateDevUI(devui) {
+		if !s.devuiServices.ValidateDevUI(devui) {
 			devuis = append(devuis, devui)
 		}
 	}
@@ -49,4 +52,7 @@ func (s *service) ProduceBatch100(devuis []string) {
 		}()
 	}
 	wg.Wait()
+	s.log.Info("backing up")
+	s.devuiServices.Backup()
+	s.log.Info("backup complete")
 }

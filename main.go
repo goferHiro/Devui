@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/goferHiro/DevEUI/factory"
-	"time"
 )
 
 func main() {
@@ -14,9 +13,6 @@ func main() {
 		lorowanServices.RegisterDEVEUI(factory)*/
 
 	factoryServices := factory.NewServices()
-
 	devuis := factoryServices.BatchOf100()
-	fmt.Println("devuis are ", devuis)
-	factoryServices.BatchOf100()
-	time.Sleep(10 * time.Second)
+	factoryServices.ProduceBatch100(devuis)
 }

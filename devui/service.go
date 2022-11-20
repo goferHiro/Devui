@@ -29,7 +29,7 @@ func (s *service) GenerateDevUI() (devui string) {
 
 func (s *service) ValidateDevUI(devui string) (valid bool) {
 	if devui == "" || len(devui) < 16 {
-		return
+		return true
 	}
 
 	uniquePart := devui[11:16]
@@ -49,7 +49,11 @@ func (s *service) Backup() {
 	filename := "usedDevs.json"
 
 	if fs, err := os.Create(filename); err == nil {
-		devUIS := funk.Values(s.devuis).([]string)
+		defer fs.Close()
+
+		devUIS := funk.Keys(s.devuis).([]string)
+
+		s.log.Info("devuis", s.devuis)
 		jsonb, err := json.Marshal(devUIS)
 		if err == nil {
 			fs.Write(jsonb)
