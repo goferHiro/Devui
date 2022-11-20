@@ -1,6 +1,7 @@
 package factory
 
 import (
+	"fmt"
 	"github.com/goferHiro/DevEUI/devui"
 	"github.com/goferHiro/DevEUI/lorowan"
 	"go.uber.org/zap"
@@ -41,6 +42,14 @@ func (s *service) BatchOf100() (devuis []string) {
 }
 
 func (s *service) ProduceBatch100(devuis []string) {
+
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("recovered")
+			s.devuiServices.Backup()
+		}
+	}()
+
 	var wg sync.WaitGroup
 	for _, devui := range devuis {
 		s.Produce(devui)
@@ -52,7 +61,5 @@ func (s *service) ProduceBatch100(devuis []string) {
 		}()
 	}
 	wg.Wait()
-	s.log.Info("backing up")
 	s.devuiServices.Backup()
-	s.log.Info("backup complete")
 }

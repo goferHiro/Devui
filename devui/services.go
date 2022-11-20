@@ -1,6 +1,9 @@
 package devui
 
-import "go.uber.org/zap"
+import (
+	"go.uber.org/zap"
+	"os"
+)
 
 type Services interface {
 	GenerateDevUI() (devui string)
@@ -11,7 +14,11 @@ type Services interface {
 
 func NewServices() Services {
 
-	logger, _ := zap.NewProduction()
+	logger, _ := zap.NewDevelopment()
+
+	if os.Getenv("mode") == "production" {
+		logger, _ = zap.NewProduction()
+	}
 
 	devuis := make(map[string]bool, 0)
 

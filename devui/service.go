@@ -53,12 +53,12 @@ func (s *service) Backup() {
 
 		devUIS := funk.Keys(s.devuis).([]string)
 
-		s.log.Info("devuis", s.devuis)
+		s.log.Debug("devuis", s.devuis)
 		jsonb, err := json.Marshal(devUIS)
 		if err == nil {
 			fs.Write(jsonb)
 		} else {
-			s.log.Error(err)
+			s.log.Error("backup failed due to ", err)
 		}
 	}
 
